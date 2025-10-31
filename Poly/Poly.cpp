@@ -1,5 +1,8 @@
 #include <stdio.h>
 #include "Poly.h"
+#include <iostream>
+#include <cmath>
+using namespace std;
 
 //-------------------------------------------------
 // Creates a polynomial from an expression.
@@ -99,8 +102,34 @@ PolyNode* AddNode(PolyNode *head, double coef, int exp){
 // Computes: poly3 = poly1 + poly2 and returns poly3
 //
 PolyNode *Add(PolyNode *poly1, PolyNode *poly2){
-	// Fill this in
-	return NULL;
+	PolyNode* newHead= NULL;
+	PolyNode* p1 = poly1;
+	PolyNode* p2 = poly2;
+	while (p1 != NULL && p2 != NULL) {
+		if(p1->exp > p2->exp){
+			newHead = AddNode(newHead, p1->coef, p1->exp);
+			p1 = p1->next;
+		} else if (p2->exp > p1->exp) {
+			newHead = AddNode(newHead, p2->coef, p2->exp);
+			p2 = p2->next;
+		} else {
+			double sumCoef = p1->coef + p2->coef;
+			
+			newHead = AddNode(newHead, sumCoef, p1->exp);
+			
+			p1 = p1->next;
+			p2 = p2->next;
+		}
+	}
+	while (p1 != NULL) {
+		newHead = AddNode(newHead, p1->coef, p1->exp);
+		p1 = p1->next;
+	}
+	while (p2 != NULL) {
+		newHead = AddNode(newHead, p2->coef, p2->exp);
+		p2 = p2->next;
+	}
+	return newHead;
 } //end-Add
 
 //-------------------------------------------------
@@ -108,8 +137,35 @@ PolyNode *Add(PolyNode *poly1, PolyNode *poly2){
 // Computes: poly3 = poly1 - poly2 and returns poly3
 //
 PolyNode *Subtract(PolyNode *poly1, PolyNode *poly2){
-	// Fill this in
-	return NULL;
+	PolyNode* newHead= NULL;
+	PolyNode* p1 = poly1;
+	PolyNode* p2 = poly2;
+	while (p1 != NULL && p2 != NULL) {
+		if(p1->exp > p2->exp){
+			newHead = AddNode(newHead, p1->coef, p1->exp);
+			p1 = p1->next;
+		} else if (p2->exp > p1->exp) {
+			newHead = AddNode(newHead, -p2->coef, p2->exp);
+			p2 = p2->next;
+		} else {
+			double sumCoef = p1->coef - p2->coef;
+			
+			newHead = AddNode(newHead, sumCoef, p1->exp);
+			
+			p1 = p1->next;
+			p2 = p2->next;
+		}
+	}
+	while (p1 != NULL) {
+		newHead = AddNode(newHead, p1->coef, p1->exp);
+		p1 = p1->next;
+	}
+	while (p2 != NULL) {
+		newHead = AddNode(newHead, -p2->coef, p2->exp);
+		p2 = p2->next;
+	}
+	return newHead;
+
 } //end-Substract
 
 //-------------------------------------------------
@@ -125,8 +181,14 @@ PolyNode *Multiply(PolyNode *poly1, PolyNode *poly2){
 // Evaluates the polynomial at a particular "x" value and returns the result
 //
 double Evaluate(PolyNode *poly, double x){
-	// Fill this in
-	return 0;
+	double totalSum = 0.0;
+	PolyNode* current = poly;
+	while(current != NULL){
+		double termValue = current->coef * pow(x, current->exp);
+		totalSum += termValue;
+		current = current->next;
+	}
+	return totalSum;
 } //end-Evaluate
 
 //-------------------------------------------------
@@ -134,8 +196,17 @@ double Evaluate(PolyNode *poly, double x){
 // Ex: poly(x) = 3x^4 - 2x + 1-->Derivative(poly) = 12x^3 - 2
 //
 PolyNode *Derivative(PolyNode *poly){
-	// Fill this in
-	return NULL;
+	PolyNode* derivHead = NULL;
+	PolyNode* current = poly;
+	while(current != NULL){
+		if(current->exp > 0){
+			double newCoef= current->coef *current->exp;
+			int newExp = current->exp -1;
+			derivHead = AddNode(derivHead, newCoef, newExp);
+		}
+		current = current->next;
+	}
+	return derivHead;
 } //end-Derivative
 
 //-------------------------------------------------
@@ -147,5 +218,5 @@ PolyNode *Derivative(PolyNode *poly){
 // then just skip it. Otherwise put a '*' char depicting the curve
 //
 void Plot(PolyNode *poly, int x1, int x2){
-	// Fill this in	
+	
 } //end-Plot
